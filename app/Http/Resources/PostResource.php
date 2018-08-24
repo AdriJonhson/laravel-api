@@ -17,6 +17,7 @@ class PostResource extends JsonResource
     {
         return [
             'id'            => $this->id,
+            'autor'         => $this->user->name,
             'title'         => $this->title,
             'body'          => $this->body,
             'created_at'    => Carbon::parse($this->created_at)->format('d/m/Y')

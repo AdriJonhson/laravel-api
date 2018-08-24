@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class PostController extends Controller
     {
         $posts = Post::with(['user'])->get();
 
-        return response()->json($posts, 200);
+        return response()->json(PostResource::collection($posts), 200);
     }
 
     /**

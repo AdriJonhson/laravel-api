@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
+use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -13,18 +16,9 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +28,17 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $post = Post::find($data['post_id']);
+        $user = User::find($data['user_id']);
+
+        $data['post_id'] = $post['id'];
+        $data['user_id'] = $user['id'];
+
+        $comment = Comment::create($data);
+
+        return response()->json(['message' => 'Comentário salvo com sucesso!', 'data' => $comment], 200);
     }
 
     /**

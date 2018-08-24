@@ -94,4 +94,11 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Dados deletados com sucesso!'], 200);
     }
+
+    public function showComments($id)
+    {
+        $post = Post::with(['comments'])->get();
+
+        return response()->json($post, 200);
+    }
 }

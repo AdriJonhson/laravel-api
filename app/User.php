@@ -27,21 +27,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function rules()
+    public function posts()
     {
-        return [
-          'name' => 'required',
-          'email' => 'required',
-          'password' => 'required'
-        ];
+        return $this->hasMany(Post::class);
     }
 
-    public function messages()
+    public function comments()
     {
-        return [
-            'name.required' => 'Nome Obrigatório',
-            'password' => 'Senha Obrigatória',
-            'password.required'=> 'Senha Obrigatória!'
-        ];
+        return $this->hasMany(Comment::class);
     }
 }

@@ -13,6 +13,23 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function(){
+    return response()->json(['message' => 'Laravel API', 'status' => 'Connected']);
+});
+
+Route::group(['namespace' => 'API'], function(){
+
+    Route::post('login', 'UserController@login');
+    Route::post('register', 'UserController@register');
+
+    //Route::group(['middleware' => 'auth:api'], function(){
+
+        Route::resource('users', 'UserController')->except(['create', 'edit']);
+        Route::resource('posts', 'PostController')->except(['create', 'edit']);
+        Route::resource('comments', 'CommentController')->except(['create', 'edit']);
+
+        Route::get('/post/{id}/comments', 'PostController@showComments');
+
+    //});
+
 });

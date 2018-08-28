@@ -1,24 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Comment;
+use App\Http\Controllers\Controller;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-
+        $this->middleware('auth:api');
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -31,10 +27,10 @@ class CommentController extends Controller
         $data = $request->all();
 
         $post = Post::find($data['post_id']);
-        $user = User::find($data['user_id']);
+//        $user = User::find($data['user_id']);
 
         $data['post_id'] = $post['id'];
-        $data['user_id'] = $user['id'];
+        $data['user_id'] = Auth::user()->id;
 
         $comment = Comment::create($data);
 

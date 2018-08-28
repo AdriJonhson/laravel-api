@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Http\Requests\UserFormRequest;
+use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class UserController extends Controller
@@ -12,7 +14,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth:api');
     }
 
     /**
@@ -112,5 +114,26 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'Dados deletetados com sucesso'], 202);
+    }
+
+    public function login()
+    {
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+            $user = Auth::user();
+            $success['token'] = $user->createToken('LaravelApi')->accessToken;
+            return response()->json(['success' => $success], 200);
+        }else{
+            return response()->json(['error' => 'Unauthorised'], 401);
+        }
+    }
+
+    public function register(Request $request)
+    {
+        $data               = $request->all();
+        $data['password']   = bcrypt($data['password']);
+        $user               = User::create($data);
+        $success['token']   = $user->createToken('LaravelApi')->accessToken;
+        $success['name']    = $user->name;
+        return response()->json(['success' => $success], 200);
     }
 }
